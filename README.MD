@@ -1,6 +1,6 @@
 # 1. Introduction
 
-This repo serves is exporation for raw dataset extraction using `docling` for Indic Datasets Extraction
+This repo serves is exporation for raw dataset extraction using various open source packages for for Indic Datasets Extraction. 
 
 
 # 2. Goals [WIP]
