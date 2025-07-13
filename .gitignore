@@ -1,5 +1,6 @@
 # Ignore Python virtual environments
-.venv/
+venv
 # ignore .DS_Store 
 .DS_Store
 .env
+fonts 
