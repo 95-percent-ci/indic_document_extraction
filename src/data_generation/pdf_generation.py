@@ -65,7 +65,7 @@ class IndicPDFGenerator:
         self.pdf.set_text_shaping(True)
 
     def _register_fonts(self):
-        font_path_all = font_file_map.get(self.font_name)
+        font_path_all = self.font_file_map.get(self.font_name)
         if isinstance(font_path_all, dict):
             font_path = font_path_all.get("normal")
             bold_font_path = font_path_all.get("B")
