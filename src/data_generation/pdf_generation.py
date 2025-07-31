@@ -151,8 +151,8 @@ class IndicPDFGenerator:
             output_filename (str): The path to save the generated PDF file.
         """
         self._set_header_footer(text)
-        self.pdf.add_page()
         self.pdf.alias_nb_pages()
+        self.pdf.add_page()
         doc_alignment_str = self._get_alignment()
         n_cols = self._get_n_cols()
         self._write_paragraphs(text, n_cols, doc_alignment_str)
