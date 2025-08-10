@@ -11,10 +11,11 @@ class PDF(FPDF):
         self.footer_text = ""
         self.add_header_flag = False
         self.add_footer_flag = False
+        self.font_name = None
 
     def header(self):
         if self.add_header_flag:
-            self.set_font(self.font_family, "B")
+            self.set_font(self.font_name, style="B", size=13)
             width = self.get_string_width(self.header_text) + 6
             self.set_x((210 - width) / 2)
             self.cell(width, 10, self.header_text, align="C", new_x="LMARGIN", new_y="NEXT")
@@ -58,30 +59,43 @@ class IndicPDFGenerator:
     def __init__(self, font_name: str, font_file_map: dict):
         self.font_name = font_name
         self.font_file_map = font_file_map
-        self.font_size = random.randint(10, 15)
+        self.font_size = random.randint(12, 15)
         self.pdf = PDF()
+        self.pdf.font_name = self.font_name
         self._register_fonts()
         self.pdf.set_font(self.font_name, size=self.font_size)
         self.pdf.set_text_shaping(True)
 
     def _register_fonts(self):
         font_path_all = self.font_file_map.get(self.font_name)
+        self.bold_avail = False
+        self.italic_avail = False
+        self.bold_italic_avail = False
         if isinstance(font_path_all, dict):
-            font_path = font_path_all.get("normal")
-            bold_font_path = font_path_all.get("B")
+            font_path = font_path_all.get("normal", None)
+            bold_font_path = font_path_all.get("B", None)
+            italic_font_path = font_path_all.get("I", None)
+            bold_italic_font_path = font_path_all.get("BI", None)
             self.pdf.add_font(self.font_name, "", font_path)
             if bold_font_path:
                 self.pdf.add_font(self.font_name, "B", bold_font_path)
+                self.bold_avail = True
+            if italic_font_path:
+                self.pdf.add_font(self.font_name, "I", italic_font_path)
+                self.italic_avail = True
+            if bold_italic_font_path:
+                self.pdf.add_font(self.font_name, "BI", bold_italic_font_path)
+                self.bold_italic_avail = True
         else:
             self.pdf.add_font(self.font_name, "", font_path_all)
 
     def _set_header_footer(self, text):
         # Header
-        if random.random() < 0.7:
+        if random.random() < 1:
             self.pdf.add_header_flag = True
             self.pdf.header_text = " ".join(random.sample(text.split(), min(5, len(text.split()))))
         # Footer
-        if random.random() < 0.9:
+        if random.random() < 0:
             self.pdf.add_footer_flag = True
             self.pdf.footer_text = " ".join(random.sample(text.split(), min(5, len(text.split()))))
 
@@ -117,12 +131,23 @@ class IndicPDFGenerator:
     
     def _get_random_style(self):
         """Randomly decide the style for a phrase (bold, italic, etc.)."""
-        style = ""
+        # styling compoents
+        style_compo = ""
         if random.random() < 0.5:
-            style += "B"
-        # Add more style logic here if needed (e.g., italic)
-        return style
-    
+            if self.bold_avail: 
+                style_compo = "B"
+        if random.random() < 0.5:
+            if self.italic_avail: 
+                style_compo = "I"
+        if random.random() < 0.3:
+            if self.bold_italic_avail: 
+                style_compo = "BI"
+        
+        # underline and strike-through
+        if random.random() < 0.3:
+            style_compo += "U"
+            return style_compo
+        return style_compo
     def _write_styled_words(self, paragraph, para):
         """Write words to the paragraph with random styling."""
         words = para.split()
@@ -141,14 +166,13 @@ class IndicPDFGenerator:
                 paragraph.write(words[i] + " ")
                 i += 1
     
-    def generate(self, text: str, output_filename: str):
+    def generate(self, text: str):
         """
         Generates a PDF document from the provided text, applying random styling, headers, footers,
         alignment, and column layout. Saves the output to the specified filename.
 
         Args:
             text (str): The input text to render in the PDF.
-            output_filename (str): The path to save the generated PDF file.
         """
         self._set_header_footer(text)
         self.pdf.alias_nb_pages()
@@ -156,4 +180,5 @@ class IndicPDFGenerator:
         doc_alignment_str = self._get_alignment()
         n_cols = self._get_n_cols()
         self._write_paragraphs(text, n_cols, doc_alignment_str)
-        self.pdf.output(output_filename)
+        return self.pdf
+
