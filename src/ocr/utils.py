@@ -11,6 +11,31 @@ def read_json(path: str) -> dict:
         if 'full_text' in data:
             data['full_text'] = data['full_text'].encode('utf-8').decode('utf-8')
         return data
+    
+def get_single_page_doc_name(path_pdf_images: list[Path]) -> list[str]:
+    """Get names of document which have multiple pages. This helps in handling these files in downstream"""    
+    # dictionary to store, file_name and it counts as they appear in image files. count >1 indicate, pdf contains 2 files
+    file_name_img_counts = {} 
+    path_pdf_img_single_pg = []
+    for image_fp in path_pdf_images:
+        image_fn = image_fp.name.split(".")[0]
+        file_name, pdf_page_count = image_fn.split("_n_pages_")[0], int(image_fn.split("_n_pages_")[-1].split("_")[0])
+        file_name_img_counts[file_name] = pdf_page_count
+        if pdf_page_count == 1:
+            path_pdf_img_single_pg.append(image_fp)
+
+    return file_name_img_counts , path_pdf_img_single_pg
+
+def get_single_page_gt_jsons(path_gt_jsons: list[Path], fn_page_count: dict[str, int]) -> list[Path]:
+    """Gets GT Json file path for documents contained in 1 page"""
+    
+    fn_counts_single_page = [key for key, value in fn_page_count.items() if value == 1]
+    path_gt_single_pg = []
+    for gt_json_path in path_gt_jsons:
+        gt_file_name = gt_json_path.name.split(".")[0]
+        if gt_file_name in fn_counts_single_page:
+            path_gt_single_pg.append(gt_json_path)
+    return path_gt_single_pg
 
 def get_ocr_results_df(image_paths, results):
     """Convert OCR results to DataFrame"""
