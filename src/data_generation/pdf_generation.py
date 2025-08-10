@@ -2,6 +2,7 @@ import random
 import warnings
 from fpdf import FPDF
 from fpdf.enums import Align
+import json
 
 class PDF(FPDF):
     """Custom PDF Class to manage headers, body & footers"""
@@ -12,11 +13,12 @@ class PDF(FPDF):
         self.add_header_flag = False
         self.add_footer_flag = False
         self.font_name = None
+        self.header_style = "B"
 
     def header(self):
         if self.add_header_flag:
-            self.set_font(self.font_name, style="B", size=13)
-            width = self.get_string_width(self.header_text) + 6
+            self.set_font(self.font_name, style=self.header_style, size=13)
+            width = self.get_string_width(self.header_style) + 6
             self.set_x((210 - width) / 2)
             self.cell(width, 10, self.header_text, align="C", new_x="LMARGIN", new_y="NEXT")
             self.ln(10)
@@ -93,6 +95,8 @@ class IndicPDFGenerator:
         # Header
         if random.random() < 1:
             self.pdf.add_header_flag = True
+            if not self.bold_avail:
+                self.pdf.header_style = ""
             self.pdf.header_text = " ".join(random.sample(text.split(), min(5, len(text.split()))))
         # Footer
         if random.random() < 0:
@@ -181,4 +185,95 @@ class IndicPDFGenerator:
         n_cols = self._get_n_cols()
         self._write_paragraphs(text, n_cols, doc_alignment_str)
         return self.pdf
+    
+class GeneratePDF:
+    """Generate PDF files for different languages using IndicPDFGenerator."""
+    
+    language_to_writing_system_wiki_avail = {
+        "marathi": ["Devanagari"], "hindi": ["Devanagari"], "sanskrit": ["Devanagari"],
+        "tamil": ["tamil"], "telugu": ["telugu"], "kannada": ["Kannada"],"malayalam": ["Malayalam"],
+        "bengali": ["Bengali"], "assamese": ["Bengali"],"manipuri": ["Bengali", "Meetei-mayek"],"nepali": ["Devanagari"],
+        "gujarati": ["Gujarati"], "punjabi": ["Gurmukhi"], "konkani": ["Devanagari"],"oriya": ["Odia"],"kashmiri": ["Devanagari", "Arabic"], 
+        "sindhi": ["Arabic", "Devanagari"], "urdu": ["Arabic"],"english": ["Latin"], "santali": ["Ol-chiki", "Devanagari"],
+        }
+
+    def __init__(self, language, fonts_folder):
+        self.language = language # language name (eg: marathi, hindi, etc.)
+        self.fonts_folder = fonts_folder # root folder for fonts
+        self.writing_systems = self.language_to_writing_system_wiki_avail.get(language, []) # available writing systems for the language
+
+    def check_writing_system(self, writing_system):
+        """Check if the writing system is applicable for the language."""
+        self.writing_system = writing_system
+        if writing_system not in self.writing_systems:
+            raise ValueError(f"Writing system '{writing_system}' is not applicable for language '{self.language}'.")
+        
+    def get_writing_system_fonts(self, writing_system):
+        """Check if the fonts for the writing system exist."""
+        fonts_writing_system = self.fonts_folder / writing_system
+        if not fonts_writing_system.exists():
+            raise FileNotFoundError(f"Fonts folder for writing system '{writing_system}' does not exist.")
+        fonts_folder = [x for x in fonts_writing_system.rglob("*/") if x.is_dir()]
+        return fonts_folder
+    
+    def select_font_randomly(self):
+        """Select a random font from the available fonts for the writing system."""
+        font_selected = random.choice(self.fonts_folder)
+        return font_selected, font_selected.name
+    
+    def set_font_properties(self):
+        """For given font, set font properties like regular, bold, italic, etc."""
+        font_files = list(self.selected_font_path.glob("*.ttf"))
+        font_prop_dict = self._get_font_properties(font_files)
+        return {self.font_name: font_prop_dict}
+
+
+    def _get_font_properties(self, font_files):
+        """Get font properties for the selected font."""
+        font_prop_dict = {}
+        for font_file in font_files:
+            fl_name = font_file.name.removesuffix(".ttf")
+            identifer_str = fl_name.split("-")[-1]  # get the last part of the font name
+            if identifer_str == "700": # bold 
+                font_prop_dict["B"] = font_file 
+            if identifer_str == "regular": # regular
+                font_prop_dict["normal"] = font_file
+            if identifer_str == "italic":
+                font_prop_dict["I"] = font_file
+            if identifer_str == "700-italic":
+                font_prop_dict["BI"] = font_file
+        return font_prop_dict 
+        
+    def generate_pdf(self, text: str, writing_system: str):
+        """Generate a PDF file with the given text."""
+        _REQ_PAGE_COUNT_ = 1
+        self.check_writing_system(writing_system)
+
+        # Get all available font folders for the writing system inside the fonts folder
+        self.fonts_folder = self.get_writing_system_fonts(writing_system)
+
+        # Select a random font path & corresponding font name from the available fonts
+        self.selected_font_path, self.font_name = self.select_font_randomly()
+
+        # Set font properties for the selected font
+        font_properties = self.set_font_properties()
+
+        # Generate PDF and ensure it has the required number of pages
+        pdf_generator_obj = IndicPDFGenerator(self.font_name, font_properties)
+        self.text = text
+        self.generated_pdf = pdf_generator_obj.generate(text)
+
+    def write_pdf(self, output_dir, file_idx):
+        """Write pdf file for given file_idx & output dir"""
+        self.generated_pdf.output(f"{output_dir}/{self.writing_system}_{self.font_name}_{file_idx}_n_pages_{self.generated_pdf.pages_count}.pdf")
+
+    def write_text(self, output_dir, file_idx):
+        """Write text file for given file_idx & output dir. This is used as ground truth later on"""
+        file_name = f"{output_dir}/{self.writing_system}_{self.font_name}_{file_idx}.json"
+        data = {
+            "header": self.generated_pdf.header_text,
+            "full_text": self.text
+        }
+        with open(file_name, 'w', encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
 

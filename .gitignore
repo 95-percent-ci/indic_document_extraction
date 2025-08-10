@@ -6,3 +6,4 @@
 synth_data
 # Ignore Python bytecode files everywhere
 **/*.pyc
+test
