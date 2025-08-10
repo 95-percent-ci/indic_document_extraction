@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 import os
 import argparse
-from src.data_generation.pdf_generation import IndicPDFGenerator, GeneratePDF
+from src.data_generation.pdf_generation import GeneratePDF
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Generate Synthetic PDF for Indic Languages')
