@@ -13,7 +13,7 @@ nest_asyncio.apply()
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Process OCR for Indic languages')
-    parser.add_argument('--lang', type=str, default='hindi',
+    parser.add_argument('--language', type=str, default='hindi',
                       help='Language to process (default: hindi)')
     return parser.parse_args()
 
@@ -22,7 +22,7 @@ def main():
     load_dotenv()
     # Initialize paths
     _PATH_SYNTH_DATA_ = Path("synth_data")
-    _LANG_ = args.lang
+    _LANG_ = args.language
     _PATH_IMAGES_LANG_ = _PATH_SYNTH_DATA_.joinpath(_LANG_)
     
     _PATH_IMAGES_LIST_PNG_ = list(_PATH_IMAGES_LANG_.glob("images/*/*.png"))
