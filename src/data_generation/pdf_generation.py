@@ -66,7 +66,7 @@ class IndicPDFGenerator:
         self.pdf.font_name = self.font_name
         self._register_fonts()
         self.pdf.set_font(self.font_name, size=self.font_size)
-        self.pdf.set_text_shaping(True)
+        self.pdf.set_text_shaping(True, direction='ltr') # this needs to be modified
 
     def _register_fonts(self):
         font_path_all = self.font_file_map.get(self.font_name)

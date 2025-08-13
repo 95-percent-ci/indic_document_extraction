@@ -9,7 +9,7 @@ from src.data_generation.pdf_generation import GeneratePDF
 def parse_args():
     parser = argparse.ArgumentParser(description='Generate Synthetic PDF for Indic Languages')
     parser.add_argument('--code', type=str, default='hn',
-                      help='Language code to generate (default: hn)')
+                      help='Language code to generate (default: hn)') # fix 
     return parser.parse_args()
 
 

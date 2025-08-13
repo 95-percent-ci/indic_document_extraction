@@ -74,7 +74,7 @@ class DocumentAIOCR:
                 raw_document=raw_document
             )
             result = self.client.process_document(request=request)
-            return result.document
+            return result.document.text
         except Exception as e:
             raise RuntimeError(f"OCR processing failed: {str(e)}")
     

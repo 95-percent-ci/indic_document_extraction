@@ -46,7 +46,7 @@ def get_ocr_results_df(image_paths, results):
         ocr_results_list_dict.append({
             "file_id": gt_file_name, 
             "degradation_level": degradation_level.split("_")[0][0].upper() + "_" + degradation_level.split("_")[1],
-            "ocr_output_raw": results[idx].text.replace("\n", " ")
+            "ocr_output_raw": results[idx].replace("\n", " ")
         })
 
     df_result = pd.DataFrame(ocr_results_list_dict)

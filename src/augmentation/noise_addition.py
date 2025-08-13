@@ -95,10 +95,12 @@ class ImageNoiseAddition():
     def apply_transform(self):
         """Apply Transform"""
         image_load = cv2.imread(self.path)
+        # Albumentations expects RGB, so convert before transform
+        image_rgb = cv2.cvtColor(image_load, cv2.COLOR_BGR2RGB)
         transforms = self.get_transform()
 
-        image_augmented = transforms(image = image_load)['image']
-        image_augmented = cv2.cvtColor(image_augmented, cv2.COLOR_BGR2RGB)
+        image_augmented = transforms(image = image_rgb)['image']
+        image_augmented = cv2.cvtColor(image_augmented, cv2.COLOR_RGB2BGR)
         return image_augmented
 
     def save_transformed_image(self, output_folder):
