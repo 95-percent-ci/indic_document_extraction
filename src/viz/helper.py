@@ -27,7 +27,7 @@ def display_box_plot(results_df: pd.DataFrame, metric_type = 'CER', script = "")
     for idx, language in enumerate(lang_list):
         results_lang = results_df.loc[results_df['language'] == language]
         for err_col in err_cols:
-            fig.add_trace(go.Box(y=results_lang[err_col] * 100,
+            fig.add_trace(go.Box(y=round(results_lang[err_col] * 100, 2),
                                     name=err_col,
                                     text=results_lang['file_id']), 
                                     row=idx + 1, col=1)
