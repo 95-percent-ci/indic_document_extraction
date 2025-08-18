@@ -66,7 +66,7 @@ class IndicPDFGenerator:
         self.pdf.font_name = self.font_name
         self._register_fonts()
         self.pdf.set_font(self.font_name, size=self.font_size)
-        self.pdf.set_text_shaping(True, direction='ltr') # this needs to be modified
+        self.pdf.set_text_shaping(True) # this needs to be modified
 
     def _register_fonts(self):
         font_path_all = self.font_file_map.get(self.font_name)
@@ -192,8 +192,8 @@ class GeneratePDF:
     language_to_writing_system_wiki_avail = {
         "marathi": ["Devanagari"], "hindi": ["Devanagari"], "sanskrit": ["Devanagari"],
         "tamil": ["tamil"], "telugu": ["telugu"], "kannada": ["Kannada"],"malayalam": ["Malayalam"],
-        "bengali": ["Bengali"], "assamese": ["Bengali"],"manipuri": ["Bengali", "Meetei-mayek"],"nepali": ["Devanagari"],
-        "gujarati": ["Gujarati"], "punjabi": ["Gurmukhi"], "konkani": ["Devanagari"],"oriya": ["Odia"],"kashmiri": ["Devanagari", "Arabic"], 
+        "bengali": ["Bengali"], "assamese": ["Bengali"], "maithali":["Devanagari"] ,"manipuri": ["Bengali", "Meetei-mayek"],"nepali": ["Devanagari"],
+        "gujarati": ["Gujarati"], "punjabi": ["Gurmukhi"], "konkani": ["Devanagari"],"oriya": ["Oriya"],"kashmiri": ["Devanagari", "Arabic"], 
         "sindhi": ["Arabic", "Devanagari"], "urdu": ["Arabic"],"english": ["Latin"], "santali": ["Ol-chiki", "Devanagari"],
         }
 

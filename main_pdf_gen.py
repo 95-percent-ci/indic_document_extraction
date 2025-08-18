@@ -25,13 +25,14 @@ if __name__ == "__main__":
     _GT_FOLDER_ = "gt"
 
     ## lang_code_interested ##
-    lang_codes = ["as", "bn", "en", "gu", "hi", "kn", "gom", "ne", "pa", "sa", "sd", "ta", "te"]
-    writing_system = ["Bengali", "Bengali", "Latin", "Gujarati" ,"Devanagari", "Kannada", "Devanagari", "Devanagari", "Gurmukhi", "Devanagari",  "Arabic", "tamil", "telugu"]
-    lang_script = dict(zip(lang_codes, writing_system))
+
+    lang_script = {'as': 'Bengali', 'bn': 'Bengali', 'en': 'Latin', 'gu': 'Gujarati', 'hi': 'Devanagari', 'kn': 'Kannada', 'ks': 'Arabic',
+                   'gom': 'Devanagari', 'ne': 'Devanagari', 'mai': 'Devanagari' , 'mr': 'Devanagari','ml': 'Malayalam','mni': 'Meetei-mayek' , 'or': 'Oriya','pa': 'Gurmukhi', 
+                   'sa': 'Devanagari', 'sat': "Ol-chiki",'sd': 'Arabic', 'ta': 'tamil', 'te': 'telugu', 'ur': 'Arabic'}
 
     language_dict = {'as': 'assamese','bn': 'bengali','brx': 'bodo','doi': 'dogri','en': 'english','gu': 'gujarati','hi': 'hindi','kn': 'kannada',
-                     'ks': 'kashmiri','gom': 'konkani','mai': 'maithili','ml': 'malayalam','mni': 'manipuri','mr': 'marathi','ne': 'nepali',
-                     'or': 'odia','pa': 'punjabi','sa': 'sanskrit','sat': 'santali','sd': 'sindhi','ta': 'tamil','te': 'telugu','ur': 'urdu'}
+                     'ks': 'kashmiri','gom': 'konkani','mai': 'maithali','ml': 'malayalam','mni': 'manipuri','mr': 'marathi','ne': 'nepali',
+                     'or': 'oriya','pa': 'punjabi','sa': 'sanskrit','sat': 'santali','sd': 'sindhi','ta': 'tamil','te': 'telugu','ur': 'urdu'}
 
     _LANGUAGE_ = language_dict[langcode]
     script = lang_script[langcode]
@@ -48,14 +49,12 @@ if __name__ == "__main__":
 
     
     ## reading ground truth source
-    _PATH_WIKI_SAMPLE = Path("raw_data/sample_wiki/combined_languages.parquet")
+    _PATH_WIKI_SAMPLE = Path("raw_data/sample_wiki/combined_languages_V2.parquet")
     df_wiki_sample = pd.read_parquet(_PATH_WIKI_SAMPLE)
 
     ## getiing lang code and word length
-    df_wiki_sample['lang_code'] = df_wiki_sample['source_file'].apply(lambda x: x.split('.')[0])
-    df_wiki_sample['word_length'] = df_wiki_sample['text'].apply(lambda x: len(x.split()))
-    df_wiki_sample = df_wiki_sample[df_wiki_sample['word_length'] > 30]
-    wiki_df = df_wiki_sample.loc[df_wiki_sample['lang_code'] == langcode].sort_values(by='word_length', ascending=False).head(_N_SAMPLES_).reset_index()
+    df_wiki_sample = df_wiki_sample[df_wiki_sample['word_count'] > 30]
+    wiki_df = df_wiki_sample.loc[df_wiki_sample['lang_code'] == langcode].sort_values(by='word_count', ascending=False).head(_N_SAMPLES_).reset_index()
 
 
     for i, row in wiki_df.iterrows():
