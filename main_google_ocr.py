@@ -28,12 +28,6 @@ def main():
     _PATH_IMAGES_LIST_PNG_ = list(_PATH_IMAGES_LANG_.glob("images/*/*.png"))
     _PATH_JSON_LIST_GT_ = list(_PATH_IMAGES_LANG_.glob("gt/*.json"))
 
-    _PATH_RESULTS_ = Path("results")
-    _PATH_SERVICE_ = Path("google")
-    _PATH_RESULTS_LANGUAGE = _PATH_RESULTS_.joinpath(_PATH_SERVICE_).joinpath(_LANG_)
-
-    if not os.path.exists(_PATH_RESULTS_LANGUAGE): os.makedirs(_PATH_RESULTS_LANGUAGE)
-
     # Initialize OCR
     indic_parser_name = "indic_test_processor"
     document_ai_obj = DocumentAIOCR(parser_nm=indic_parser_name)
@@ -41,6 +35,12 @@ def main():
     # Get pdf images corresponding to single page
     fn_counts, path_images_single_pg = get_single_page_doc_name(_PATH_IMAGES_LIST_PNG_)
     path_gt_single_pg = get_single_page_gt_jsons(_PATH_JSON_LIST_GT_, fn_counts)
+
+    _PATH_RESULTS_ = Path("results")
+    _PATH_SERVICE_ = Path("google")
+    _PATH_RESULTS_LANGUAGE = _PATH_RESULTS_.joinpath(_PATH_SERVICE_).joinpath(_LANG_)
+
+    if not os.path.exists(_PATH_RESULTS_LANGUAGE): os.makedirs(_PATH_RESULTS_LANGUAGE)
 
     # Process images
     results = asyncio.run(document_ai_obj.process_multiple_images(path_images_single_pg))

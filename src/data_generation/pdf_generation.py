@@ -58,7 +58,7 @@ class IndicPDFGenerator:
         _write_paragraphs(text, n_cols, doc_alignment_str):
             Writes the text into the PDF in paragraphs, with random styling and indentation.
     """
-    def __init__(self, font_name: str, font_file_map: dict):
+    def __init__(self, font_name: str, font_file_map: dict, writing_system: str):
         self.font_name = font_name
         self.font_file_map = font_file_map
         self.font_size = random.randint(12, 15)
@@ -66,7 +66,17 @@ class IndicPDFGenerator:
         self.pdf.font_name = self.font_name
         self._register_fonts()
         self.pdf.set_font(self.font_name, size=self.font_size)
-        self.pdf.set_text_shaping(True) # this needs to be modified
+        self._set_text_shaping(writing_system)  # Set text shaping based on the writing system
+
+    def _set_text_shaping(self, writing_system: str):
+        """
+        Set text shaping based on the writing system.
+        This is a placeholder for future implementation.
+        """
+        if writing_system in ["Arabic"]:
+            self.pdf.set_text_shaping(True, direction='rtl')
+        else:
+            self.pdf.set_text_shaping(True)
 
     def _register_fonts(self):
         font_path_all = self.font_file_map.get(self.font_name)
@@ -259,7 +269,7 @@ class GeneratePDF:
         font_properties = self.set_font_properties()
 
         # Generate PDF and ensure it has the required number of pages
-        pdf_generator_obj = IndicPDFGenerator(self.font_name, font_properties)
+        pdf_generator_obj = IndicPDFGenerator(self.font_name, font_properties, writing_system=writing_system)
         self.text = text
         self.generated_pdf = pdf_generator_obj.generate(text)
 

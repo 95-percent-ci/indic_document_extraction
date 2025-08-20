@@ -6,8 +6,9 @@ class TesseractOCR():
     """Class to Handle Tessaract OCR Outputs"""
     # language name to tessarct model code map #
     name_map = {"assamese": "asm", "bengali": "ben", "english": "eng", "gujarati": "guj",
-                "hindi": "hin", "kannada": "kan", "nepali": "nep", "odia": "ori", "punjabi": "pan",
-                "sanskrit": "san", "sindhi": "snd", "tamil": "tam", "telugu": "tel", "urdu": "urd"}
+                "hindi": "hin", "kannada": "kan", "nepali": "nep", "marathi": "mar","malayalam": "mal",
+                "oriya": "ori", "punjabi": "pan","sanskrit": "san", "sindhi": "snd", 
+                "tamil": "tam", "telugu": "tel", "urdu": "urd"}
     
     def __init__(self, language_name: str):
         lang_id = self.name_map.get(language_name)

@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     for i, row in wiki_df.iterrows():
         text_hn = " ".join(wiki_df.iloc[i]['text'].split(" ")[0:_N_WORDS_])
-        generator_obj = GeneratePDF(language=_LANGUAGE_, fonts_folder=_FONTS_FOLDER_)
+        generator_obj = GeneratePDF(language=_LANGUAGE_, fonts_folder=_FONTS_FOLDER_,)
         generator_obj.generate_pdf(text=text_hn, writing_system=script)
         generator_obj.write_pdf(lang_pdf_folder, file_idx=i+1)
         generator_obj.write_text(lang_gt_folder, file_idx=i+1)

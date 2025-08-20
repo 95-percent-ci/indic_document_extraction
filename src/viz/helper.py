@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 
-def display_box_plot(results_df: pd.DataFrame, metric_type = 'CER', script = ""):
+def display_box_plot(results_df: pd.DataFrame, metric_type = 'CER', script = "", height=1200, width=1400):
     """Display Box Plot of error rate for given metric type
 
     :param results_df: _description_
@@ -33,7 +33,7 @@ def display_box_plot(results_df: pd.DataFrame, metric_type = 'CER', script = "")
                                     row=idx + 1, col=1)
 
 
-    fig.update_layout(height=1200, width=1400)
+    fig.update_layout(height=height, width=width)
     fig.update_layout(showlegend=False, title_text=f"{metric_type} % across various degradation level in {script} languages")
     fig.update_yaxes(title_text=f"{metric_type} in %")
 
