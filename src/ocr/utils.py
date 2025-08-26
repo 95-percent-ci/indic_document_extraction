@@ -35,15 +35,13 @@ def get_single_page_gt_jsons(path_gt_jsons: list[Path], fn_page_count: dict[str,
             path_gt_single_pg.append(gt_json_path)
     return path_gt_single_pg
 
-def get_ocr_results_df(image_paths, results, unicode_normaliser: None):
+def get_ocr_results_df(image_paths, results):
     """Convert OCR results to DataFrame"""
     ocr_results_list_dict = []
     for idx, img_path in enumerate(image_paths):
         degradation_level = img_path.parent.name
         gt_file_name = img_path.name.split("_n_pages_")[0]
         ocr_output_raw = results[idx].replace("\n", " ")
-        if unicode_normaliser:
-             ocr_output_raw = unicode_normaliser.normalize(ocr_output_raw)
         ocr_results_list_dict.append({
             "file_id": gt_file_name, 
             "degradation_level": degradation_level.split("_")[0][0].upper() + "_" + degradation_level.split("_")[1],
