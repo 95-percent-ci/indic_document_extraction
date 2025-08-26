@@ -1,16 +1,14 @@
 import json
 from pathlib import Path
 import pandas as pd
+from PIL import Image
+
 
 def read_json(path: str) -> dict:
     """Reads JSON and properly decodes Indic text"""
     with open(path, 'r', encoding='utf-8') as file:
         data = json.load(file)
-        if 'header' in data:
-            data['header'] = data['header'].encode('utf-8').decode('utf-8')
-        if 'full_text' in data:
-            data['full_text'] = data['full_text'].encode('utf-8').decode('utf-8')
-        return data
+    return data
     
 def get_single_page_doc_name(path_pdf_images: list[Path]) -> list[str]:
     """Get names of document which have multiple pages. This helps in handling these files in downstream"""    
@@ -37,16 +35,19 @@ def get_single_page_gt_jsons(path_gt_jsons: list[Path], fn_page_count: dict[str,
             path_gt_single_pg.append(gt_json_path)
     return path_gt_single_pg
 
-def get_ocr_results_df(image_paths, results):
+def get_ocr_results_df(image_paths, results, unicode_normaliser: None):
     """Convert OCR results to DataFrame"""
     ocr_results_list_dict = []
     for idx, img_path in enumerate(image_paths):
         degradation_level = img_path.parent.name
         gt_file_name = img_path.name.split("_n_pages_")[0]
+        ocr_output_raw = results[idx].replace("\n", " ")
+        if unicode_normaliser:
+             ocr_output_raw = unicode_normaliser.normalize(ocr_output_raw)
         ocr_results_list_dict.append({
             "file_id": gt_file_name, 
             "degradation_level": degradation_level.split("_")[0][0].upper() + "_" + degradation_level.split("_")[1],
-            "ocr_output_raw": results[idx].replace("\n", " ")
+            "ocr_output_raw": ocr_output_raw
         })
 
     df_result = pd.DataFrame(ocr_results_list_dict)
@@ -62,3 +63,12 @@ def get_ocr_results_df(image_paths, results):
         for col in pivoted_df.columns
     }
     return pivoted_df.rename(columns=renamed_columns)
+
+def read_image(image_path: Path) -> Image.Image:
+        """Read image from a path. If Resize is True, it sets width to 2048 and adjusts height to maintain aspect ratio."""
+        if isinstance(image_path, str):
+                image_path = Path(image_path)
+        if not image_path.exists():
+            raise FileNotFoundError(f"Image file {image_path} does not exist.")
+        img_load = Image.open(image_path)
+        return img_load
