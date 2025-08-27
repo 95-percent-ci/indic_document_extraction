@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     ## lang_code_interested ##
 
-    lang_script = {'as': 'Bengali', 'bn': 'Bengali', 'en': 'Latin', 'gu': 'Gujarati', 'hi': 'Devanagari', 'kn': 'Kannada', 'ks': 'Arabic',
+    lang_script = {'as': 'Bengali', 'bn': 'Bengali', 'brx': 'Devanagari', 'doi': 'Devanagari', 'en': 'Latin', 'gu': 'Gujarati', 'hi': 'Devanagari', 'kn': 'Kannada', 'ks': 'Arabic',
                    'gom': 'Devanagari', 'ne': 'Devanagari', 'mai': 'Devanagari' , 'mr': 'Devanagari','ml': 'Malayalam','mni': 'Meetei-mayek' , 'or': 'Oriya','pa': 'Gurmukhi', 
                    'sa': 'Devanagari', 'sat': "Ol-chiki",'sd': 'Arabic', 'ta': 'tamil', 'te': 'telugu', 'ur': 'Arabic'}
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     
     ## reading ground truth source
-    _PATH_WIKI_SAMPLE = Path("raw_data/sample_wiki/combined_languages_V2.parquet")
+    _PATH_WIKI_SAMPLE = Path("raw_data/indic_lang_samples/indic_sample.parquet")
     df_wiki_sample = pd.read_parquet(_PATH_WIKI_SAMPLE)
 
     ## getiing lang code and word length

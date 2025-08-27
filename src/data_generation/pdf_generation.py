@@ -200,7 +200,7 @@ class GeneratePDF:
     """Generate PDF files for different languages using IndicPDFGenerator."""
     
     language_to_writing_system_wiki_avail = {
-        "marathi": ["Devanagari"], "hindi": ["Devanagari"], "sanskrit": ["Devanagari"],
+        "marathi": ["Devanagari"], "hindi": ["Devanagari"], "sanskrit": ["Devanagari"], "dogri": ["Devanagari"], "bodo": ["Devanagari"],
         "tamil": ["tamil"], "telugu": ["telugu"], "kannada": ["Kannada"],"malayalam": ["Malayalam"],
         "bengali": ["Bengali"], "assamese": ["Bengali"], "maithali":["Devanagari"] ,"manipuri": ["Bengali", "Meetei-mayek"],"nepali": ["Devanagari"],
         "gujarati": ["Gujarati"], "punjabi": ["Gurmukhi"], "konkani": ["Devanagari"],"oriya": ["Oriya"],"kashmiri": ["Devanagari", "Arabic"], 

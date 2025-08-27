@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from src.ocr.utils import read_json, get_ocr_results_df, get_single_page_doc_name, get_single_page_gt_jsons
 from src.evaluation.metrics import cer, wer
-from src.ocr.tesseract_infer import TesseractOCR, ocr_worker
+from src.ocr.tesseract_infer import ocr_worker
 import argparse
 import tqdm
 from multiprocessing import Pool, cpu_count
