@@ -70,3 +70,5 @@ def read_image(image_path: Path) -> Image.Image:
             raise FileNotFoundError(f"Image file {image_path} does not exist.")
         img_load = Image.open(image_path)
         return img_load
+
+
