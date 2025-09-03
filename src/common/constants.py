@@ -13,3 +13,8 @@ language_to_writing_system = {
     "sindhi": ["Arabic", "Devanagari"], "urdu": ["Arabic"],"english": ["Latin"], "santali": ["Ol-chiki"],
     "maithali": ["Devanagari"], "dogri": ["Devanagari"], "bodo": ["Devanagari"]
     }
+
+## code map for normalisation
+language_code_norm_map = {"sanskrit": "sa", "hindi": "hi", "konkani": "kK","punjabi": "pa", "nepali" :"ne", "sindhi": "sd", "bengali": "bn", 
+                     "assamese": "as", "gujarati": "gu", "marathi": "mr", "odia": "or", "kannada": "kn", "malayalam": "ml", 
+                     "telugu": "te", "tamil": "ta"}
